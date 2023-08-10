@@ -3,6 +3,7 @@ import os
 import subprocess
 import zipfile
 import time
+import shutil
 
 luminafs_ascii = r"""
  .----------------. .----------------. .----------------. .----------------. .-----------------..----------------. .----------------. .----------------. 
@@ -21,215 +22,246 @@ luminafs_ascii = r"""
 print(luminafs_ascii)
 
 
+
 class FileSystemManager:
     def create_file(self):
         file_name = input("Enter the filename or file path to save in a different directory (e.g: /home/user-directory/file_name): ")
-        if os.path.exists(file_name):
-            print("File already exists.")
-        else:
-            with open(file_name, 'w') as f:
-                print(f"{file_name} created successfully.")
+        try:
+            if os.path.exists(file_name):
+                print("File already exists.")
+            else:
+                with open(file_name, 'w') as f:
+                    print(f"{file_name} created successfully.")
+        except Exception as e:
+            print(f"Error occurred while creating the file: {str(e)}")
 
     def read_file(self):
         file_name = input("Enter the filename path (e.g: /home/user-directory/file_name): ")
-        if os.path.exists(file_name):
-            with open(file_name, 'r') as f:
-                content = f.read()
-                print("File content:")
-                print(content)
-        else:
-            print(f"{file_name} not Found")
+        try:
+            if os.path.exists(file_name):
+                with open(file_name, 'r') as f:
+                    content = f.read()
+                    print("File content:")
+                    print(content)
+            else:
+                print(f"{file_name} not Found")
+        except Exception as e:
+            print(f"Error occurred while reading the file: {str(e)}")
 
     def write_to_file(self):
-        file_name = input("Enter the filename path (e.g. /home/user-directory/file_name): ")
-        if os.path.exists(file_name):
-            with open(file_name, 'a') as f:
-                w_file = input(f"Enter something in {file_name}: ")
-                f.write(w_file)
-                print("Written data Successfully")
-        else:
-            print(f"{file_name} not found.")
+        file_name = input("Enter the filename Path (e.g. /home/user-directory/file_name): ")
+        try:
+            if os.path.exists(file_name):
+                print("File already exists.")
+            else:
+                with open(file_name, 'w') as f:
+                    print(f"{file_name} created successfully.")
+                with open(file_name, 'a') as f:
+                    w_file = input(f"Enter something in {file_name}: ")
+                    f.write(w_file)
+                    print("Written data Successfully")
+        except Exception as e:
+            print(f"Error occurred while writing to the file: {str(e)}")
 
     def delete_file(self):
         file_name = input("Enter the filename (e.g: /home/user/file_name): ")
-        if os.path.exists(file_name):
-            os.remove(file_name)
-            print(f"{file_name} deleted successfully.")
-        else:
-            print(f"{file_name} not found.")
+        try:
+            if os.path.exists(file_name):
+                os.remove(file_name)
+                print(f"{file_name} deleted successfully.")
+            else:
+                print(f"{file_name} not found.")
+        except Exception as e:
+            print(f"Error occurred while deleting the file: {str(e)}")
 
     def copy_file(self):
-        src_file = input("Enter the source file path: ")
-        if os.path.exists(src_file):
-            dst_file = input("Enter the destination file path: ")
-            if not os.path.exists(dst_file):
-                shutil.copy(src_file, dst_file)
-                print(f"{src_file} copied to {dst_file} successfully.")
+        source_file = input("Enter the source filename path (e.g: /home/user/file_name): ")
+        destination_file = input("Enter the destination filename path (e.g: /home/user/file_name): ")
+        try:
+            if os.path.exists(source_file):
+                shutil.copy2(source_file, destination_file)
+                print(f"{source_file} copied to {destination_file} successfully.")
             else:
-                print(f"{dst_file} already exists.")
-        else:
-            print(f"{src_file} not found.")
+                print(f"{source_file} not found.")
+        except Exception as e:
+            print(f"Error occurred while copying the file: {str(e)}")
 
     def move_file(self):
-        src_file = input("Enter the source file path: ")
-        if os.path.exists(src_file):
-            dst_file = input("Enter the destination file path: ")
-            if not os.path.exists(dst_file):
-                shutil.move(src_file, dst_file)
-                print(f"{src_file} moved to {dst_file} successfully.")
+        source_file = input("Enter the source filename path (e.g: /home/user/file_name): ")
+        destination_file = input("Enter the destination filename path (e.g: /home/user/file_name): ")
+        try:
+            if os.path.exists(source_file):
+                shutil.move(source_file, destination_file)
+                print(f"{source_file} moved to {destination_file} successfully.")
             else:
-                print(f"{dst_file} already exists.")
-        else:
-            print(f"{src_file} not found.")
+                print(f"{source_file} not found.")
+        except Exception as e:
+            print(f"Error occurred while moving the file: {str(e)}")
 
     def rename_file(self):
-        old_name = input("Enter the old filename: ")
-        if not old_name:
-            print("Invalid old name. Please provide a valid name.")
-            return
-
+        source_file = input("Enter the source filename path (e.g: /home/user/file_name): ")
         new_name = input("Enter the new filename: ")
-        if not new_name:
-            print("Invalid new name. Please provide a valid name.")
-            return
-
         try:
-            if os.path.exists(old_name):
-                os.rename(old_name, new_name)
-                print(f"{old_name} has been renamed to {new_name} successfully.")
+            if os.path.exists(source_file):
+                os.rename(source_file, new_name)
+                print(f"{source_file} renamed to {new_name} successfully.")
             else:
-                print(f"{old_name} not found.")
+                print(f"{source_file} not found.")
         except Exception as e:
-            print(f"Error occurred while renaming: {str(e)}")
+            print(f"Error occurred while renaming the file: {str(e)}")
 
     def create_directory(self):
         dir_name = input("Enter the directory name: ")
-        if os.path.exists(dir_name):
-            print(f"{dir_name} already exists.")
-        else:
-            os.mkdir(dir_name)
-            print(f"{dir_name} created successfully.")
+        try:
+            if os.path.exists(dir_name):
+                print(f"{dir_name} already exists.")
+            else:
+                os.mkdir(dir_name)
+                print(f"{dir_name} created successfully.")
+        except Exception as e:
+            print(f"Error occurred while creating the directory: {str(e)}")
 
     def create_directory_create_file(self):
         dir_name = input("Enter the directory name: ")
-        if os.path.exists(dir_name):
-            print(f"{dir_name} already exists.")
-        else:
-            os.mkdir(dir_name)
-            print(f"{dir_name} created successfully.")
-        file_name = input("Enter the filename Path (e.g. /home/user-directory/file_name): ")
-        if os.path.exists(file_name):
-            print(f"{file_name} already exists.")
-        else:
-            with open(file_name, 'w') as f:
-                print(f"{file_name} created successfully.")
+        try:
+            if os.path.exists(dir_name):
+                print(f"{dir_name} already exists.")
+            else:
+                os.mkdir(dir_name)
+                print(f"{dir_name} created successfully.")
+                file_name = input("Enter the filename Path (e.g. /home/user-directory/file_name): ")
+                if os.path.exists(file_name):
+                    print(f"{file_name} already exists.")
+                else:
+                    with open(file_name, 'w') as f:
+                        print(f"{file_name} created successfully.")
+        except Exception as e:
+            print(f"Error occurred while creating the directory or file: {str(e)}")
 
     def create_directory_create_file_and_write_to_file(self):
         dir_name = input("Enter the directory name: ")
-        if os.path.exists(dir_name):
-            print(f"{dir_name} already exists.")
-        else:
-            os.mkdir(dir_name)
-            print(f"{dir_name} created successfully.")
-        file_name = input("Enter the filename Path (e.g. /home/user-directory/file_name): ")
-        if os.path.exists(file_name):
-            print(f"{file_name} already exists.")
-        else:
-            with open(file_name, 'w') as f:
-                print(f"{file_name} created successfully.")
-            with open(file_name, 'a') as f:
-                data = input("Enter some data on file: ")
-                f.write(data)
-                print(" Data written successfully.")
+        try:
+            if os.path.exists(dir_name):
+                print(f"{dir_name} already exists.")
+            else:
+                os.mkdir(dir_name)
+                print(f"{dir_name} created successfully.")
+                file_name = input("Enter the filename Path (e.g. /home/user-directory/file_name): ")
+                if os.path.exists(file_name):
+                    print(f"{file_name} already exists.")
+                else:
+                    with open(file_name, 'w') as f:
+                        print(f"{file_name} created successfully.")
+                    with open(file_name, 'a') as f:
+                        data = input("Enter some data in the file: ")
+                        f.write(data)
+                        print("Data written successfully.")
+        except Exception as e:
+            print(f"Error occurred while creating the directory, file, or writing data: {str(e)}")
 
     def list_files_in_directory(self):
         dir_name = input("Enter the directory name: ")
-        if os.path.exists(dir_name):
-            files = os.listdir(dir_name)
-            print("[LIST OF FILE IN DIRECTORY]>>")
-            for file in files:
-                print(file)
-        else:
-            print("Directory not found.")
+        try:
+            if os.path.exists(dir_name):
+                files = os.listdir(dir_name)
+                print(f"[LIST OF FILES IN DIRECTORY: {dir_name}]>>")
+                for file in files:
+                    print('******************P*E*R*M*I*S*S*I*O*N*S******************')
+                    file_path = os.path.join(dir_name, file)
+                    if os.access(file_path, os.R_OK):
+                        print(f"\t{file} has read permissions granted.")
+                    else:
+                        print(f"\t{file} has read permissions not granted.")
+                    if os.access(file_path, os.W_OK):
+                        print(f"\t{file} has write permissions granted.")
+                    else:
+                        print(f"\t{file} has write permissions not granted.")
+                    if os.access(file_path, os.X_OK):
+                        print(f"\t{file} has execute permissions granted.")
+                    else:
+                        print(f"\t{file} has execute permissions not granted.")
+            else:
+                print("Directory not found.")
+        except Exception as e:
+            print(f"Error occurred while listing files in the directory: {str(e)}")
 
     def search_file_in_directory(self):
         dir_name = input("Enter the directory name: ")
-        if os.path.exists(dir_name):
-            file_name = input("Enter the filename to search: ")
-            if file_name in os.listdir(dir_name):
-                print(f"{file_name} found.")
+        try:
+            if os.path.exists(dir_name):
+                file_name = input("Enter the filename to search: ")
+                if file_name in os.listdir(dir_name):
+                    print(f"{file_name} found.")
+                else:
+                    print(f"{file_name} not found.")
             else:
-                print(f"{file_name} not found.")
-        else:
-            print(f"{dir_name} not found.")
+                print(f"{dir_name} not found.")
+        except Exception as e:
+            print(f"Error occurred while searching for the file: {str(e)}")
 
     def delete_dir(self):
         dir_name = input("Enter the name of the directory:")
-        if os.path.exists(dir_name):
-            os.rmdir(dir_name)
-            print(f"{dir_name} has been deleted successfully.")
-        else:
-            print(f"{dir_name} does not exist.")
+        try:
+            if os.path.exists(dir_name):
+                os.rmdir(dir_name)
+                print(f"{dir_name} has been deleted successfully.")
+            else:
+                print(f"{dir_name} does not exist.")
+        except Exception as e:
+            print(f"Error occurred while deleting the directory: {str(e)}")
 
     def change_file_permissions(self, file_path, mode):
         try:
             subprocess.run(['chmod', str(mode), file_path])
             print("File permissions changed successfully.")
-        except subprocess.CalledProcessError as e:
-            print("Error while changing file permissions:", str(e))
+        except Exception as e:
+            print(f"Error occurred while changing file permissions: {str(e)}")
 
-    def change_file_ownership(self, file_path, owner, group):
+    def change_owner(self, file_path, owner):
         try:
-            subprocess.run(['chown', f"{owner}:{group}", file_path])
-            print("File ownership changed successfully.")
-        except subprocess.CalledProcessError as e:
-            print("Error while changing file ownership:", str(e))
+            subprocess.run(['chown', owner, file_path])
+            print(f"File owner changed to {owner} successfully.")
+        except Exception as e:
+            print(f"Error occurred while changing file owner: {str(e)}")
 
     def change_perm_and_owner(self):
-        file_path = input("Enter the file path (eg: /home/user-directory/file_name): ")
-        if os.path.exists(file_path):
-            mode_input = input("Enter the new file permissions (e.g., '755', '644'): ")
-            try:
-                mode = int(mode_input, 8)  # Convert octal string to integer
-                self.change_file_permissions(file_path, mode)
-
-                owner = input("Enter the new owner: ")
-                group = input("Enter the new group: ")
-                self.change_file_ownership(file_path, owner, group)
-            except ValueError:
-                print("Invalid octal format. Please enter a valid octal number.")
-        else:
-            print(f"{file_path} not found.")
+        file_path = input("Enter the file path (e.g: /home/user-directory/file_name): ")
+        try:
+            if os.path.exists(file_path):
+                mode_input = input("Enter the new file permissions (e.g., '755', '644'): ")
+                try:
+                    mode = int(mode_input, 8)  # Convert octal string to integer
+                    owner = input("Enter the new file owner (e.g., 'user:group'): ")
+                    self.change_file_permissions(file_path, mode)
+                    self.change_owner(file_path, owner)
+                except ValueError:
+                    print("Invalid octal format. Please enter a valid octal number.")
+            else:
+                print(f"{file_path} not found.")
+        except Exception as e:
+            print(f"Error occurred while changing file permissions or owner: {str(e)}")
 
     def compress_file_or_directory(self):
-        file_path = input("Enter the file/directory path to compress: ")
-        if os.path.exists(file_path):
-            zip_name = input("Enter the ZIP file name to create: ")
-            if not os.path.exists(zip_name):
-                with zipfile.ZipFile(zip_name, 'w') as zipf:
-                    if os.path.isdir(file_path):
-                        for root, dirs, files in os.walk(file_path):
-                            for file in files:
-                                zipf.write(os.path.join(root, file))
-                    else:
-                        zipf.write(file_path)
-                print(f"{file_path} compressed to {zip_name} successfully.")
+        file_path = input("Enter the file or directory path to compress: ")
+        try:
+            if os.path.exists(file_path):
+                shutil.make_archive(file_path, 'zip', file_path)
+                print(f"{file_path} compressed successfully.")
             else:
-                print(f"{zip_name} already exists.")
-        else:
-            print(f"{file_path} not found.")
+                print(f"{file_path} not found.")
+        except Exception as e:
+            print(f"Error occurred while compressing the file or directory: {str(e)}")
 
     def decompress_zip_file(self):
-        zip_name = input("Enter the ZIP file path to decompress: ")
-        if os.path.exists(zip_name) and zipfile.is_zipfile(zip_name):
-            extract_path = input("Enter the path to extract ZIP contents: ")
-            if not os.path.exists(extract_path):
-                os.makedirs(extract_path)
-            with zipfile.ZipFile(zip_name, 'r') as zipf:
-                zipf.extractall(extract_path)
-            print(f"{zip_name} decompressed to {extract_path} successfully.")
-        else:
-            print(f"{zip_name} not found or not a valid ZIP file.")
+        zip_file = input("Enter the ZIP file path to decompress: ")
+        try:
+            if os.path.exists(zip_file):
+                shutil.unpack_archive(zip_file, os.path.dirname(zip_file))
+                print(f"{zip_file} decompressed successfully.")
+            else:
+                print(f"{zip_file} not found.")
+        except Exception as e:
+            print(f"Error occurred while decompressing the ZIP file: {str(e)}")
 
     def file_search(self):
         keyword = input("Enter the keyword to search for in files: ")
